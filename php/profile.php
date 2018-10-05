@@ -1,8 +1,10 @@
 <?php
+  header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
   if(!isset($_COOKIE['username'])) {
-    header("Location: /login.php");
+    header("Location: login.php");
     exit;
   }
+  
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,9 +12,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta Http-Equiv="Cache-Control" Content="no-cache">
-  <meta Http-Equiv="Pragma" Content="no-cache">
-  <meta Http-Equiv="Expires" Content="0">
   <title>Thông tin thành viên</title>
   <link rel="stylesheet" href="./css/main.css">
 </head>
@@ -28,8 +27,8 @@
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     } 
-    $username = $_COOKIE['username'];
-    $sql = "SELECT * FROM thanhvien WHERE tendangnhap='$username'";
+    $user = $_COOKIE['username'];
+    $sql = "SELECT * FROM thanhvien WHERE tendangnhap='$user'";
     $result = $conn->query($sql);
     
     if ($result->num_rows > 0) {

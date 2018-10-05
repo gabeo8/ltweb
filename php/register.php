@@ -1,7 +1,4 @@
 <?php
-    // get form input
-    
-    // echo password_hash("rasmuslerdorf", PASSWORD_DEFAULT);
   if((isset($_POST['dangnhap']) && $_POST['dangnhap'] !='') 
       && (isset($_POST['matkhau'])&& $_POST['matkhau'] !='')
       && (isset($_POST['matkhau2'])&& $_POST['matkhau2'] !='')
@@ -46,7 +43,7 @@
 
     if ($conn->query($sql) === TRUE) {
       setcookie('username', $dn, time() + (86400 * 30), "/"); // 86400 = 1 day
-      header("Location: /profile.php");
+      header("Location: profile.php");
       exit;
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;

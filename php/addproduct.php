@@ -1,10 +1,64 @@
+<?php
+  // header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+  if(!isset($_COOKIE['username'])) {
+    header("Location: login.php");
+    exit;
+  }
+  
+  if((isset($_POST['tensp']) && $_POST['tensp'] !='') 
+      && (isset($_POST['chitietsp'])&& $_POST['chitietsp'] !='')
+      && (isset($_POST['giasp'])&& $_POST['giasp'] !='')
+      && (isset($_FILES['hinhdaidien']['name']) && $_FILES['hinhdaidien']['name'] !='')
+    ) {
+
+    $user = $_COOKIE['username'];
+    
+    require "lib/config.php";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } 
+
+    $sql = "SELECT id FROM thanhvien WHERE tendangnhap = '$user'";
+    $result = $conn->query($sql);
+
+      
+    if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        $id = $row['id'];
+    }
+    // echo $id;
+    $tensp = $_POST['tensp'];
+    $ctsp = $_POST['chitietsp'];
+    $gsp = $_POST['giasp'];
+    $target_dir = 'uploads/';
+    $target_file = $target_dir  . uniqid() . '-' . basename($_FILES['hinhdaidien']['name']);
+    if (move_uploaded_file($_FILES["hinhdaidien"]["tmp_name"], $target_file)) {
+      $urlsp = $target_file;
+    }
+
+    $sql2 = "INSERT INTO sanpham(tensp, chitietsp, giasp, hinhanhsp, idtv)
+                        VALUES ('$tensp', '$ctsp', '$gsp', '$urlsp', '$id')";
+
+    if ($conn->query($sql2) === TRUE) {
+      header("Location: products.php");
+      exit;
+    } else {
+        echo "Error: " . $sql2 . "<br>" . $conn->error;
+    }
+    $conn->close();
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Đăng kí thành viên</title>
+  <title>Them san pham moi</title>
   <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
